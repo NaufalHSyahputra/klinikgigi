@@ -1,6 +1,9 @@
-
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.sql.Connection;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 /*
@@ -14,12 +17,35 @@ import javax.swing.JPanel;
  * @author Admin
  */
 public class StrukTransaksi extends javax.swing.JFrame {
-
+    private String id_pemeriksaan;
+    private int subtotal=0;
+    private int gtot=0;
+    private int ppn=0;
+    private int kembali=0;
+    private int jumlah=0;
     /**
      * Creates new form StrukTransaksi
      */
     public StrukTransaksi() {
         initComponents();
+    }
+    
+    public void setIDP(String v){
+        id_pemeriksaan=v;
+    }
+    private String setCurrency(int v){
+        DecimalFormat kursIndonesia = (DecimalFormat) DecimalFormat.getCurrencyInstance();
+        DecimalFormatSymbols formatRp = new DecimalFormatSymbols();
+
+        formatRp.setCurrencySymbol("Rp. ");
+        formatRp.setMonetaryDecimalSeparator(',');
+        formatRp.setGroupingSeparator('.');
+
+        kursIndonesia.setDecimalFormatSymbols(formatRp);
+        return kursIndonesia.format(v);
+    }
+    public String getIDP(){
+        return id_pemeriksaan;
     }
 
     /**
@@ -35,23 +61,31 @@ public class StrukTransaksi extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
+        labelHObat = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
+        labelHDokter = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
         jLabel9 = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
+        labelSubTotal = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
-        jLabel14 = new javax.swing.JLabel();
+        labelKembali = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
-        jLabel15 = new javax.swing.JLabel();
+        labelBayar = new javax.swing.JLabel();
+        labelPPN = new javax.swing.JLabel();
         jLabel16 = new javax.swing.JLabel();
+        labelTotal = new javax.swing.JLabel();
+        jSeparator2 = new javax.swing.JSeparator();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 3, 24)); // NOI18N
         jLabel1.setText("Klinik Medical Care");
@@ -66,50 +100,59 @@ public class StrukTransaksi extends javax.swing.JFrame {
         jLabel5.setText("Harga Obat");
         jPanel2.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 83, 227, 44));
 
-        jLabel6.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        jLabel6.setText("Rp. 1.000.000,00");
-        jPanel2.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 80, 195, 44));
+        labelHObat.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        labelHObat.setText("Rp. 1.000.000,00");
+        jPanel2.add(labelHObat, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 80, 195, 44));
 
         jLabel7.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel7.setText("Harga Dokter");
         jPanel2.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 30, 227, 44));
 
-        jLabel8.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        jLabel8.setText("Rp. 1.000.000,00");
-        jPanel2.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 30, 203, 44));
+        labelHDokter.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        labelHDokter.setText("Rp. 0,00");
+        jPanel2.add(labelHDokter, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 30, 203, 44));
         jPanel2.add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 130, 450, 20));
 
         jLabel9.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel9.setText("Subtotal");
         jPanel2.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 140, 227, 44));
 
-        jLabel10.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        jLabel10.setText("Rp. 1.000.000");
-        jPanel2.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 140, 195, 44));
+        labelSubTotal.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        labelSubTotal.setText("Rp. 1.000.000");
+        jPanel2.add(labelSubTotal, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 140, 195, 44));
 
         jLabel11.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel11.setText("Kembalian");
-        jPanel2.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 280, 227, 44));
+        jPanel2.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 320, 227, 44));
 
         jLabel13.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel13.setText("PPN (10%)");
         jPanel2.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 180, 227, 44));
 
-        jLabel14.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        jLabel14.setText("Rp. 100.000");
-        jPanel2.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 270, 195, 44));
+        labelKembali.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        labelKembali.setText("Rp. 100.000");
+        jPanel2.add(labelKembali, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 320, 195, 44));
 
         jLabel12.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel12.setText("Bayar");
-        jPanel2.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 220, 227, 44));
+        jPanel2.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 280, 227, 44));
 
-        jLabel15.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        jLabel15.setText("Rp. 100.000");
-        jPanel2.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 220, 195, 44));
+        labelBayar.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        labelBayar.setText("Rp. 100.000");
+        jPanel2.add(labelBayar, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 280, 195, 44));
+
+        labelPPN.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        labelPPN.setText("Rp. 100.000");
+        jPanel2.add(labelPPN, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 180, 195, 44));
 
         jLabel16.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        jLabel16.setText("Rp. 100.000");
-        jPanel2.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 180, 195, 44));
+        jLabel16.setText("Total");
+        jPanel2.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 220, 227, 44));
+
+        labelTotal.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        labelTotal.setText("Rp. 0,00");
+        jPanel2.add(labelTotal, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 220, 195, 44));
+        jPanel2.add(jSeparator2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 272, 450, 20));
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         jLabel3.setText("Semoga Lekas Sembuh");
@@ -141,7 +184,7 @@ public class StrukTransaksi extends javax.swing.JFrame {
                 .addGroup(layout.createSequentialGroup()
                     .addGap(150, 150, 150)
                     .addComponent(jLabel4)
-                    .addContainerGap(165, Short.MAX_VALUE)))
+                    .addContainerGap(175, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -151,13 +194,13 @@ public class StrukTransaksi extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 334, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 53, Short.MAX_VALUE)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 385, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
                 .addComponent(jLabel3)
                 .addGap(22, 22, 22))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                    .addContainerGap(448, Short.MAX_VALUE)
+                    .addContainerGap(492, Short.MAX_VALUE)
                     .addComponent(jLabel4)
                     .addGap(59, 59, 59)))
         );
@@ -165,15 +208,32 @@ public class StrukTransaksi extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    public BufferedImage createImage(JPanel panel) {
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        try{
+            String sql = "SELECT SUM(o.harga_obat) tot_obat, d.tarif_dokter tot_dokter, t.total_bayar from tabel_transaksi t INNER JOIN tabel_pemeriksaan p ON p.kode_pemeriksaan = t.id_pemeriksaan INNER JOIN tabel_dokter d ON d.id_dokter = p.id_dokter INNER JOIN tabel_resep r ON r.id_pemeriksaan = p.kode_pemeriksaan INNER JOIN tabel_obat o ON o.id_obat = r.id_obat WHERE t.id_transaksi = "+getIDP();
+            java.sql.Connection conn=(Connection)Koneksi.configDB();
+            java.sql.Statement stm=conn.createStatement();
+            java.sql.ResultSet res=stm.executeQuery(sql);
+            if(res.next())
+            {
+                subtotal = res.getInt("tot_obat")+res.getInt("tot_dokter");
+                ppn = subtotal*10/100;
+                gtot = subtotal+ppn;
+                labelHObat.setText(setCurrency(res.getInt("tot_obat")));
+                labelHDokter.setText(setCurrency(res.getInt("tot_dokter")));
+                labelSubTotal.setText(setCurrency(subtotal));
+                labelPPN.setText(setCurrency(ppn));
+                labelTotal.setText(setCurrency(gtot));
+                labelBayar.setText(setCurrency(res.getInt("total_bayar")));
+                labelKembali.setText(setCurrency(res.getInt("total_bayar")-gtot));
+            }else{
+                JOptionPane.showMessageDialog(null, "Kode Pemeriksaan Tidak Ada!");
+            }
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null, "Error : "+e);
+        }
+    }//GEN-LAST:event_formWindowOpened
 
-    int w = panel.getWidth();
-    int h = panel.getHeight();
-    BufferedImage bi = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
-    Graphics2D g = bi.createGraphics();
-    panel.paint(g);
-    return bi;
-}
     
     /**
      * @param args the command line arguments
@@ -212,22 +272,25 @@ public class StrukTransaksi extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JLabel labelBayar;
+    private javax.swing.JLabel labelHDokter;
+    private javax.swing.JLabel labelHObat;
+    private javax.swing.JLabel labelKembali;
+    private javax.swing.JLabel labelPPN;
+    private javax.swing.JLabel labelSubTotal;
+    private javax.swing.JLabel labelTotal;
     // End of variables declaration//GEN-END:variables
 }

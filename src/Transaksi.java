@@ -4,8 +4,11 @@
  * and open the template in the editor.
  */
 import java.sql.Connection;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import javax.swing.JOptionPane;
 /**
  *
@@ -168,6 +171,11 @@ public class Transaksi extends javax.swing.JFrame {
         jButton2.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jButton2.setText("Proses Pembayaran");
         jButton2.setEnabled(false);
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
         jPanel2.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 380, 420, 40));
 
         jLabel16.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
@@ -248,6 +256,26 @@ public class Transaksi extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jTextField1KeyReleased
 
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = new Date();  
+        try {
+            String sql = "INSERT INTO tabel_transaksi(id_pemeriksaan,total_bayar,tanggal_bayar) VALUES ('"+txtkodepemeriksaan.getText()+"','"+jTextField1.getText()+"','"+dateFormat.format(date)+"')";
+            String sql2 = "UPDATE tabel_pemeriksaan SET status_pemeriksaan = 'Success' WHERE kode_pemeriksaan = '"+txtkodepemeriksaan.getText()+"'";
+            java.sql.Connection conn=(Connection)Koneksi.configDB();
+            java.sql.PreparedStatement pst=conn.prepareStatement(sql);
+            pst.execute();
+            java.sql.Connection conn2=(Connection)Koneksi.configDB();
+            java.sql.PreparedStatement pst2=conn.prepareStatement(sql2);
+            pst2.execute();
+            StrukTransaksi st = new StrukTransaksi();
+            st.setIDP(txtkodepemeriksaan.getText().toString());
+            st.setVisible(true);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
+
         private void searchPemeriksaan(String kode){
         try{
             String sql = "select SUM(o.harga_obat) tot_obat, d.tarif_dokter tot_dokter from tabel_pemeriksaan p INNER JOIN tabel_dokter d ON d.id_dokter = p.id_dokter INNER JOIN tabel_resep r ON r.id_pemeriksaan = p.kode_pemeriksaan INNER JOIN tabel_obat o ON o.id_obat = r.id_obat WHERE p.kode_pemeriksaan = "+kode+" AND p.status_pemeriksaan = 'Waiting Payment'";
@@ -288,11 +316,6 @@ public class Transaksi extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
