@@ -1,3 +1,7 @@
+
+import java.sql.Connection;
+import javax.swing.table.DefaultTableModel;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -8,16 +12,27 @@
  *
  * @author Admin
  */
-public class TransaksiObat extends javax.swing.JDialog {
-
+public class TransaksiObat extends javax.swing.JFrame {
+    
+    private String id_pemeriksaan;
     /**
      * Creates new form TransaksiObat
      */
-    public TransaksiObat(java.awt.Frame parent, boolean modal) {
-        super(parent, modal);
+    public TransaksiObat() {
         initComponents();
     }
-
+        public void setidpemeriksaan(String v){
+        id_pemeriksaan = v;
+    }
+    public String getidpemeriksaan(){
+        return id_pemeriksaan;
+    }
+    public TransaksiObat(String data){
+        initComponents();
+        setidpemeriksaan(data);
+        jLabel1.setText(getidpemeriksaan());
+        load_tabel();
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -29,6 +44,7 @@ public class TransaksiObat extends javax.swing.JDialog {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -42,20 +58,25 @@ public class TransaksiObat extends javax.swing.JDialog {
         ));
         jScrollPane1.setViewportView(jTable1);
 
+        jLabel1.setText("jLabel1");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(15, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1))
+                .addContainerGap(15, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(42, 42, 42)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -65,6 +86,27 @@ public class TransaksiObat extends javax.swing.JDialog {
     /**
      * @param args the command line arguments
      */
+    public void load_tabel()
+	{
+        DefaultTableModel tabelModel = new DefaultTableModel();
+        //menampilkan data database kedalam tabel
+        tabelModel.addColumn("Nama Obat");
+        tabelModel.addColumn("Jumlah");
+        tabelModel.addColumn("Harga");
+        jTable1.setModel(tabelModel);
+        try {
+            String sql = "SELECT o.nama_obat, r.harga, r.jumlah FROM tabel_pemeriksaan p INNER JOIN tabel_resep r ON p.kode_pemeriksaan = r.id_pemeriksaan INNER JOIN tabel_obat o ON r.id_obat = o.id_obat WHERE p.kode_pemeriksaan = "+id_pemeriksaan;
+            java.sql.Connection conn=(Connection)Koneksi.configDB();
+            java.sql.Statement stm=conn.createStatement();
+            java.sql.ResultSet res=stm.executeQuery(sql);
+            while(res.next()){
+                tabelModel.addRow(new Object[]{res.getString(1),res.getString(2),res.getString(3)});
+            }
+            jTable1.setModel(tabelModel);
+        } catch (Exception e) {
+            System.out.println("Error ? "+e.getMessage());
+        }
+	}
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -89,22 +131,16 @@ public class TransaksiObat extends javax.swing.JDialog {
         }
         //</editor-fold>
 
-        /* Create and display the dialog */
+        /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                TransaksiObat dialog = new TransaksiObat(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
+                new TransaksiObat().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables

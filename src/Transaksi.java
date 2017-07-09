@@ -237,12 +237,13 @@ public class Transaksi extends javax.swing.JFrame {
     }//GEN-LAST:event_btncari1ActionPerformed
 
     private void btnsubmit1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnsubmit1ActionPerformed
-        String kode = txtkodepemeriksaan.getText().toString();
+        String kode = txtkodepemeriksaan.getText();
         searchPemeriksaan(kode);
     }//GEN-LAST:event_btnsubmit1ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        
+        String kode = txtkodepemeriksaan.getText();
+        new TransaksiObat(kode).setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jTextField1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyReleased
@@ -268,9 +269,7 @@ public class Transaksi extends javax.swing.JFrame {
             java.sql.Connection conn2=(Connection)Koneksi.configDB();
             java.sql.PreparedStatement pst2=conn.prepareStatement(sql2);
             pst2.execute();
-            StrukTransaksi st = new StrukTransaksi();
-            st.setIDP(txtkodepemeriksaan.getText().toString());
-            st.setVisible(true);
+            new StrukTransaksi(txtkodepemeriksaan.getText()).setVisible(true);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
         }
@@ -365,6 +364,6 @@ public class Transaksi extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField txtkodepemeriksaan;
+    public javax.swing.JTextField txtkodepemeriksaan;
     // End of variables declaration//GEN-END:variables
 }

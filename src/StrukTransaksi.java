@@ -29,6 +29,9 @@ public class StrukTransaksi extends javax.swing.JFrame {
     public StrukTransaksi() {
         initComponents();
     }
+    public StrukTransaksi(String data){
+        initComponents();
+    }
     
     public void setIDP(String v){
         id_pemeriksaan=v;
@@ -79,7 +82,7 @@ public class StrukTransaksi extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowOpened(java.awt.event.WindowEvent evt) {
