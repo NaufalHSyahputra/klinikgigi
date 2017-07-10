@@ -75,6 +75,7 @@ public class ManagePemeriksaan extends javax.swing.JFrame {
         txttanggal = new org.jdesktop.swingx.JXDatePicker();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Data Pasien"));
 

@@ -60,6 +60,7 @@ public final class ManageObat extends javax.swing.JFrame {
         jTable1 = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
 
         jLabel_Image.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image/obat.jpeg"))); // NOI18N
 
