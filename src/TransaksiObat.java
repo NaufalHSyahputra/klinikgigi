@@ -20,6 +20,7 @@ public class TransaksiObat extends javax.swing.JFrame {
      */
     public TransaksiObat() {
         initComponents();
+        this.setLocationRelativeTo(null);
     }
         public void setidpemeriksaan(String v){
         id_pemeriksaan = v;

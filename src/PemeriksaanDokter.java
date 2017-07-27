@@ -35,6 +35,7 @@ public class PemeriksaanDokter extends javax.swing.JDialog {
 					int brs = jTable1.getSelectedRow();
 					
 					mp.setDataPopUp(new String[] {jTable1.getValueAt(brs, 0).toString(),jTable1.getValueAt(brs, 1).toString()});
+                                        mp.setIDD(jTable1.getValueAt(brs, 0).toString());
 					dispose();
 			}
 		});

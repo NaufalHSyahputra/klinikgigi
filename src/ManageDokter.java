@@ -24,7 +24,18 @@ public class ManageDokter extends javax.swing.JFrame {
         initComponents();
         reset();
         load_table();
+        this.setLocationRelativeTo(null);
     }
+    
+    private String id_dokter;
+    private String nama_dokter;
+    private String status_dokter = "Aktif";
+    private String nohp_dokter;
+    private String jk_dokter = "Laki-Laki";
+    private String username_dokter;
+    private String password_dokter;
+    private int tarif_dokter;
+    private String status_crud;
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -38,26 +49,30 @@ public class ManageDokter extends javax.swing.JFrame {
         jOptionPane2 = new javax.swing.JOptionPane();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        txtidd = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
+        txtnamad = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jTextField6 = new javax.swing.JTextField();
+        txtnohpd = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        cbjkd = new javax.swing.JComboBox<>();
         jLabel7 = new javax.swing.JLabel();
-        jTextField7 = new javax.swing.JTextField();
-        jComboBox2 = new javax.swing.JComboBox<>();
+        txttarifd = new javax.swing.JTextField();
+        cbstatusd = new javax.swing.JComboBox<>();
+        txtusernamed = new javax.swing.JTextField();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        txtpasswordd = new javax.swing.JTextField();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        jButton4 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton7 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
+        btntambah = new javax.swing.JButton();
+        btnedit = new javax.swing.JButton();
+        btndelete = new javax.swing.JButton();
+        btnsimpan = new javax.swing.JButton();
+        btnbatal = new javax.swing.JButton();
+        btnreset = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -65,17 +80,29 @@ public class ManageDokter extends javax.swing.JFrame {
 
         jLabel1.setText("ID Dokter");
 
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        txtidd.setEnabled(false);
+        txtidd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                txtiddActionPerformed(evt);
+            }
+        });
+        txtidd.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtiddKeyReleased(evt);
             }
         });
 
         jLabel2.setText("Nama Dokter");
 
-        jTextField2.addActionListener(new java.awt.event.ActionListener() {
+        txtnamad.setEnabled(false);
+        txtnamad.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField2ActionPerformed(evt);
+                txtnamadActionPerformed(evt);
+            }
+        });
+        txtnamad.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtnamadKeyReleased(evt);
             }
         });
 
@@ -85,23 +112,77 @@ public class ManageDokter extends javax.swing.JFrame {
 
         jLabel5.setText("Jenis Kelamin Dokter");
 
-        jTextField6.addActionListener(new java.awt.event.ActionListener() {
+        txtnohpd.setEnabled(false);
+        txtnohpd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField6ActionPerformed(evt);
+                txtnohpdActionPerformed(evt);
+            }
+        });
+        txtnohpd.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtnohpdKeyReleased(evt);
             }
         });
 
         jLabel6.setText("Nohp Dokter");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Laki-Laki", "Perempuan" }));
-
-        jTextField7.addActionListener(new java.awt.event.ActionListener() {
+        cbjkd.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Laki-Laki", "Perempuan" }));
+        cbjkd.setEnabled(false);
+        cbjkd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField7ActionPerformed(evt);
+                cbjkdActionPerformed(evt);
             }
         });
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Aktif", "Tidak Aktif" }));
+        txttarifd.setEnabled(false);
+        txttarifd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txttarifdActionPerformed(evt);
+            }
+        });
+        txttarifd.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txttarifdKeyReleased(evt);
+            }
+        });
+
+        cbstatusd.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Aktif", "Tidak Aktif" }));
+        cbstatusd.setEnabled(false);
+        cbstatusd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbstatusdActionPerformed(evt);
+            }
+        });
+
+        txtusernamed.setToolTipText("");
+        txtusernamed.setEnabled(false);
+        txtusernamed.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtusernamedActionPerformed(evt);
+            }
+        });
+        txtusernamed.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtusernamedKeyReleased(evt);
+            }
+        });
+
+        jLabel8.setText("Username Dokter");
+
+        jLabel9.setText("Password Dokter");
+
+        txtpasswordd.setToolTipText("");
+        txtpasswordd.setEnabled(false);
+        txtpasswordd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtpassworddActionPerformed(evt);
+            }
+        });
+        txtpasswordd.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtpassworddKeyReleased(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -110,29 +191,37 @@ public class ManageDokter extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel7)
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel2)
                             .addComponent(jLabel1)
-                            .addComponent(jLabel3))
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel8))
                         .addGap(55, 55, 55)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jComboBox2, javax.swing.GroupLayout.Alignment.LEADING, 0, 223, Short.MAX_VALUE)
-                            .addComponent(jTextField1))
-                        .addGap(19, 19, 19)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txtusernamed)
+                            .addComponent(txtnamad)
+                            .addComponent(cbstatusd, 0, 223, Short.MAX_VALUE)
+                            .addComponent(txtidd, javax.swing.GroupLayout.Alignment.TRAILING))
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel6)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(19, 19, 19)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel4)
+                                    .addComponent(jLabel6)
+                                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel9)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jTextField6, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jComboBox1, javax.swing.GroupLayout.Alignment.LEADING, 0, 283, Short.MAX_VALUE)
-                            .addComponent(jTextField7, javax.swing.GroupLayout.Alignment.LEADING)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel7)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                            .addComponent(txtnohpd, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cbjkd, javax.swing.GroupLayout.Alignment.LEADING, 0, 283, Short.MAX_VALUE)
+                            .addComponent(txttarifd, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtpasswordd))))
                 .addGap(21, 21, 21))
         );
         jPanel1Layout.setVerticalGroup(
@@ -142,27 +231,35 @@ public class ManageDokter extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel1)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(txtidd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel5)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(cbjkd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(13, 13, 13)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel2)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(txtnamad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel6)
-                            .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(txtnohpd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel4)
-                        .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel4)
+                            .addComponent(txttarifd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cbstatusd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel9)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(txtusernamed, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel8)
+                                .addComponent(txtpasswordd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel3)
                         .addGap(79, 79, 79)
@@ -189,62 +286,159 @@ public class ManageDokter extends javax.swing.JFrame {
 
         getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 260, 860, 190));
 
-        jButton4.setText("Tambah");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        btntambah.setText("Tambah");
+        btntambah.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                btntambahActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 210, 120, 40));
+        getContentPane().add(btntambah, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 210, 120, 40));
 
-        jButton3.setText("Edit");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        btnedit.setText("Edit");
+        btnedit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                btneditActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 210, 120, 40));
+        getContentPane().add(btnedit, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 210, 120, 40));
 
-        jButton2.setText("Delete");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        btndelete.setText("Delete");
+        btndelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                btndeleteActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 210, 120, 40));
+        getContentPane().add(btndelete, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 210, 120, 40));
 
-        jButton7.setText("Simpan");
-        jButton7.addActionListener(new java.awt.event.ActionListener() {
+        btnsimpan.setText("Simpan");
+        btnsimpan.setEnabled(false);
+        btnsimpan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton7ActionPerformed(evt);
+                btnsimpanActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton7, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 210, 120, 40));
+        getContentPane().add(btnsimpan, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 210, 120, 40));
 
-        jButton6.setText("Batal");
-        getContentPane().add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 210, 120, 40));
+        btnbatal.setText("Batal");
+        btnbatal.setEnabled(false);
+        btnbatal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnbatalActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnbatal, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 210, 120, 40));
 
-        jButton5.setText("Reset");
-        getContentPane().add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 210, 120, 40));
+        btnreset.setText("Reset");
+        btnreset.setEnabled(false);
+        btnreset.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnresetActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnreset, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 210, 120, 40));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        jButton4.setEnabled(false);
-        jButton2.setEnabled(false);
-        jButton3.setEnabled(false);
-        jButton5.setEnabled(true);
-        jButton6.setEnabled(true);
-        jButton7.setEnabled(true);
-        enable_all_TF();
-        jLabel7.setText("tambah");
-    }//GEN-LAST:event_jButton4ActionPerformed
-
-    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-        if(jLabel7.getText() == "tambah"){
+    public void setIDD(String v) {
+     id_dokter = v;
+    }
+    public void setNamaD(String v) {
+     nama_dokter = v;
+    }
+    public void setUsernameD(String v) {
+     username_dokter = v;
+    }
+    public void setPassD(String v) {
+     password_dokter = v;
+    }
+    public void setNohpD(String v) {
+     nohp_dokter = v;
+    }
+    public void setStatusD(String v) {
+     status_dokter = v;
+    }
+    public void setHargaD(int v) {
+     tarif_dokter = v;
+    }
+    public void setJKD(String v){
+        jk_dokter = v;
+    }
+    public void setStatusC(String v) {
+     status_crud = v;
+    }
+    public String getIDD() {
+     return id_dokter;
+    }
+    public String getNamaD() {
+     return nama_dokter;
+    }
+    public String getUsernameD() {
+     return username_dokter;
+    }
+    public String getPassD() {
+     return password_dokter;
+    }
+    public String getNohpD() {
+     return nohp_dokter;
+    }
+    public String getStatusD() {
+     return status_dokter;
+    }
+    public int getHargaD(){
+        return tarif_dokter;
+    }
+    public String getJKD(){
+        return jk_dokter;
+    }
+    public String getStatusC() {
+     return status_crud;
+    }
+    
+        //batal
+    public void batal() {
+     txtidd.setEnabled(false);
+     txtnamad.setEnabled(false);
+     txtnohpd.setEnabled(false);
+     txtpasswordd.setEnabled(false);
+     txtusernamed.setEnabled(false);
+     cbstatusd.setEnabled(false);
+     cbjkd.setEnabled(false);
+     txttarifd.setEnabled(false);
+     btnreset.setEnabled(false);
+     btnbatal.setEnabled(false);
+     btnsimpan.setEnabled(false);
+     btndelete.setEnabled(true);
+     btnedit.setEnabled(true);
+     btntambah.setEnabled(true);
+     setStatusC("");
+     reset();
+    }
+    //reset
+    public void reset() {
+     txtidd.setText(null);
+     txtnamad.setText(null);
+     txtnohpd.setText(null);
+     txtpasswordd.setText(null);
+     txtusernamed.setText(null);
+     txttarifd.setText(null);
+     cbstatusd.setSelectedItem(this);
+     cbjkd.setSelectedItem(this);
+    }
+    //Dipanggil Saat ingin mengenable semua text Field
+    public void enableAllTF() {
+     txtidd.setEnabled(true);
+     txtnamad.setEnabled(true);
+     txtnohpd.setEnabled(true);
+     txtpasswordd.setEnabled(true);
+     txtusernamed.setEnabled(true);
+     cbstatusd.setEnabled(true);
+     cbjkd.setEnabled(true);
+     txttarifd.setEnabled(true);
+    }
+    public void insertData() {
         try {
-            String sql = "INSERT INTO tabel_dokter VALUES ('"+jTextField1.getText()+"','"+jTextField2.getText()+"','"+jComboBox1.getSelectedItem()+"','"+jTextField7.getText()+"','"+jComboBox2.getSelectedItem()+"','"+jTextField6.getText()+"')";
+            String sql = "INSERT INTO tabel_dokter VALUES ('"+getIDD()+"','"+getNamaD()+"','"+getJKD()+"','"+getHargaD()+"','"+getStatusD()+"','"+getNohpD()+"','"+getUsernameD()+"','"+getPassD()+"')";
             java.sql.Connection conn=(Connection)Koneksi.configDB();
             java.sql.PreparedStatement pst=conn.prepareStatement(sql);
             pst.execute();
@@ -253,9 +447,10 @@ public class ManageDokter extends javax.swing.JFrame {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
         }
-        }else if(jLabel7.getText() == "edit"){
+    }
+    public void updateData() {
            try {
-            String sql ="UPDATE tabel_dokter SET nama_dokter = '"+jTextField2.getText()+"', jk_dokter = '"+jComboBox1.getSelectedItem()+"',tarif_dokter= '"+jTextField7.getText()+"',status_dokter= '"+jComboBox2.getSelectedItem()+"',nohp_dokter= '"+jTextField6.getText()+"' WHERE id_dokter = '"+jTextField1.getText()+"'";
+            String sql ="UPDATE tabel_dokter SET nama_dokter = '"+getNamaD()+"', jk_dokter = '"+getJKD()+"',tarif_dokter= '"+getHargaD()+"',status_dokter= '"+getStatusD()+"',nohp_dokter= '"+getNohpD()+"',username= '"+getUsernameD()+"',password= '"+getPassD()+"' WHERE id_dokter = '"+getIDD()+"'";
             java.sql.Connection conn=(Connection)Koneksi.configDB();
             java.sql.PreparedStatement pst=conn.prepareStatement(sql);
             pst.execute();
@@ -263,9 +458,10 @@ public class ManageDokter extends javax.swing.JFrame {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Perubahan Data Gagal"+e.getMessage());
         }
-        }else if(jLabel7.getText() == "hapus"){
+    }
+    public void deleteData() {
             try {
-            String sql ="DELETE FROM tabel_dokter where id_dokter='"+jTextField1.getText()+"'";
+            String sql ="DELETE FROM tabel_dokter where id_dokter='"+getIDD()+"'";
             java.sql.Connection conn=(Connection)Koneksi.configDB();
             java.sql.PreparedStatement pst=conn.prepareStatement(sql);
             pst.execute();
@@ -273,76 +469,180 @@ public class ManageDokter extends javax.swing.JFrame {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
         }
+    }
+    public boolean verifikasiData(){
+        if(getNamaD() == ""){
+            JOptionPane.showMessageDialog(this, "Nama Dokter Masih Kosong");
+            return false;
+        }else if(getHargaD() == 0){
+            JOptionPane.showMessageDialog(this, "Harga Dokter Masih Kosong");
+            return false;
+        }else if(getUsernameD() == ""){
+            JOptionPane.showMessageDialog(this, "Username Dokter Masih Kosong");
+            return false;
+        }else if(getPassD() == ""){
+            JOptionPane.showMessageDialog(this, "Password Dokter Masih Kosong");
+            return false;
+        }else if(getNohpD() == ""){
+            JOptionPane.showMessageDialog(this, "Nomor HP Dokter Masih Kosong");
+            return false;
+        }else{
+            return true;
         }
-        load_table();
-        kosong();
-        jButton4.setEnabled(true);
-        jButton2.setEnabled(true);
-        jButton3.setEnabled(true);
-        jButton5.setEnabled(false);
-        jButton6.setEnabled(false);
-        jButton7.setEnabled(false);
-    }//GEN-LAST:event_jButton7ActionPerformed
+    }
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void btntambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btntambahActionPerformed
+        btntambah.setEnabled(false);
+        btndelete.setEnabled(false);
+        btnedit.setEnabled(false);
+        btnreset.setEnabled(true);
+        btnbatal.setEnabled(true);
+        btnsimpan.setEnabled(true);
+        enableAllTF();
+        setStatusC("tambah");
+    }//GEN-LAST:event_btntambahActionPerformed
+
+    private void btnsimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnsimpanActionPerformed
+        if (getStatusC() == "tambah") {
+            if(verifikasiData() == true){
+                insertData();
+                load_table();
+                batal();
+            }
+        } else if (getStatusC() == "edit") {
+            if(verifikasiData() == true){
+                updateData(); 
+                load_table();
+                batal();
+            }
+        } else if (getStatusC() == "hapus") {
+            if(verifikasiData() == true){
+                deleteData();  
+                load_table();
+                batal();
+            }
+        }
+    }//GEN-LAST:event_btnsimpanActionPerformed
+
+    private void btneditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btneditActionPerformed
         JOptionPane.showMessageDialog(null, "Silahkan Klik Data Yang Ingin Diedit Pada Tabel Dibawah");
-        jButton4.setEnabled(false);
-        jButton2.setEnabled(false);
-        jButton3.setEnabled(false);
-        jButton5.setEnabled(true);
-        jButton6.setEnabled(true);
-        jButton7.setEnabled(true);
-        enable_all_TF();
-        jTextField1.setEnabled(false);
-        jLabel7.setText("edit");
-    }//GEN-LAST:event_jButton3ActionPerformed
+        btntambah.setEnabled(false);
+        btndelete.setEnabled(false);
+        btnedit.setEnabled(false);
+        btnreset.setEnabled(true);
+        btnbatal.setEnabled(true);
+        btnsimpan.setEnabled(true);
+        enableAllTF();
+        txtidd.setEnabled(false);
+        setStatusC("edit");
+    }//GEN-LAST:event_btneditActionPerformed
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-        if(jLabel7.getText() == "edit" || jLabel7.getText() == "hapus"){
+        if(getStatusC() == "edit" || getStatusC() == "hapus"){
         int baris = jTable1.rowAtPoint(evt.getPoint());
         String id_pasien =jTable1.getValueAt(baris, 0).toString();
-        jTextField1.setText(id_pasien);
+        txtidd.setText(id_pasien);
+        setIDD(txtidd.getText());
         String nama_pasien =jTable1.getValueAt(baris, 1).toString();
-        jTextField2.setText(nama_pasien);
+        txtnamad.setText(nama_pasien);
+        setNamaD(txtnamad.getText());
         String jr = jTable1.getValueAt(baris, 2).toString();
-        jComboBox1.setSelectedItem(jr);
+        cbjkd.setSelectedItem(jr);
+        setJKD(cbjkd.getSelectedItem().toString());
         String tarif=jTable1.getValueAt(baris, 3).toString();
-        jTextField7.setText(tarif);
+        txttarifd.setText(tarif);
+        setHargaD(Integer.parseInt(txttarifd.getText()));
         String status = jTable1.getValueAt(baris, 4).toString();
-        jComboBox2.setSelectedItem(status);
+        cbstatusd.setSelectedItem(status);
+        setStatusD(cbstatusd.getSelectedItem().toString());
         String nohp = jTable1.getValueAt(baris, 5).toString();
-        jTextField6.setText(nohp);
+        txtnohpd.setText(nohp);
+        setNohpD(txtnohpd.getText());
+        String username = jTable1.getValueAt(baris, 6).toString();
+        txtusernamed.setText(username);
+        setUsernameD(txtusernamed.getText());
+        String password = jTable1.getValueAt(baris, 7).toString();
+        txtpasswordd.setText(username);
+        setPassD(txtpasswordd.getText());
         }
     }//GEN-LAST:event_jTable1MouseClicked
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void btndeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btndeleteActionPerformed
         JOptionPane.showMessageDialog(null, "Silahkan Klik Data Yang Ingin Dihapus Pada Tabel Dibawah, dan klik Delete Data");
-        jButton4.setEnabled(false);
-        jButton2.setEnabled(false);
-        jButton3.setEnabled(false);
-        jButton5.setEnabled(true);
-        jButton6.setEnabled(true);
-        jButton7.setEnabled(true);
-        jButton7.setText("Delete Data");
-        jTextField1.setEnabled(false);
-        jLabel7.setText("hapus");
-    }//GEN-LAST:event_jButton2ActionPerformed
+        btntambah.setEnabled(false);
+        btndelete.setEnabled(false);
+        btnedit.setEnabled(false);
+        btnreset.setEnabled(true);
+        btnbatal.setEnabled(true);
+        btnsimpan.setEnabled(true);
+        btnsimpan.setText("Delete Data");
+        txtidd.setEnabled(false);
+        setStatusC("hapus");
+    }//GEN-LAST:event_btndeleteActionPerformed
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    private void txtiddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtiddActionPerformed
+        setIDD(txtidd.getText());
+    }//GEN-LAST:event_txtiddActionPerformed
 
-    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField2ActionPerformed
+    private void txtnamadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtnamadActionPerformed
+        setNamaD(txtnamad.getText());
+    }//GEN-LAST:event_txtnamadActionPerformed
 
-    private void jTextField6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField6ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField6ActionPerformed
+    private void txtnohpdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtnohpdActionPerformed
+        setNohpD(txtnohpd.getText());
+    }//GEN-LAST:event_txtnohpdActionPerformed
 
-    private void jTextField7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField7ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField7ActionPerformed
+    private void txttarifdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txttarifdActionPerformed
+        setHargaD(Integer.parseInt(txttarifd.getText()));
+    }//GEN-LAST:event_txttarifdActionPerformed
+
+    private void cbstatusdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbstatusdActionPerformed
+        setStatusD(cbstatusd.getSelectedItem().toString());
+    }//GEN-LAST:event_cbstatusdActionPerformed
+
+    private void cbjkdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbjkdActionPerformed
+        setJKD(cbjkd.getSelectedItem().toString());
+    }//GEN-LAST:event_cbjkdActionPerformed
+
+    private void txtpassworddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtpassworddActionPerformed
+        setPassD(txtpasswordd.getText());
+    }//GEN-LAST:event_txtpassworddActionPerformed
+
+    private void txtusernamedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtusernamedActionPerformed
+        setUsernameD(txtusernamed.getText());
+    }//GEN-LAST:event_txtusernamedActionPerformed
+
+    private void btnbatalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnbatalActionPerformed
+        batal();
+    }//GEN-LAST:event_btnbatalActionPerformed
+
+    private void btnresetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnresetActionPerformed
+        reset();
+    }//GEN-LAST:event_btnresetActionPerformed
+
+    private void txtnamadKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtnamadKeyReleased
+        setNamaD(txtnamad.getText());
+    }//GEN-LAST:event_txtnamadKeyReleased
+
+    private void txtusernamedKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtusernamedKeyReleased
+        setUsernameD(txtusernamed.getText());
+    }//GEN-LAST:event_txtusernamedKeyReleased
+
+    private void txtnohpdKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtnohpdKeyReleased
+        setNohpD(txtnohpd.getText());
+    }//GEN-LAST:event_txtnohpdKeyReleased
+
+    private void txttarifdKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txttarifdKeyReleased
+        setHargaD(Integer.parseInt(txttarifd.getText()));
+    }//GEN-LAST:event_txttarifdKeyReleased
+
+    private void txtpassworddKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtpassworddKeyReleased
+        setPassD(txtpasswordd.getText());
+    }//GEN-LAST:event_txtpassworddKeyReleased
+
+    private void txtiddKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtiddKeyReleased
+        setIDD(txtidd.getText());
+    }//GEN-LAST:event_txtiddKeyReleased
 private void load_table(){
         //menampilkan data database kedalam tabel
         DefaultTableModel model = new DefaultTableModel();
@@ -352,6 +652,8 @@ private void load_table(){
         model.addColumn("Tarif Dokter");
         model.addColumn("Status Dokter");
         model.addColumn("Nomor Telp");
+        model.addColumn("Username Dokter");
+        model.addColumn("Password Dokter");
         try {
             int no=1;
             String sql = "select * from tabel_dokter";
@@ -359,43 +661,11 @@ private void load_table(){
             java.sql.Statement stm=conn.createStatement();
             java.sql.ResultSet res=stm.executeQuery(sql);
             while(res.next()){
-                model.addRow(new Object[]{res.getString(1),res.getString(2),res.getString(3),res.getString(4),res.getString(5),res.getString(6)});
+                model.addRow(new Object[]{res.getString(1),res.getString(2),res.getString(3),res.getString(4),res.getString(5),res.getString(6),res.getString(7),res.getString(8)});
             }
             jTable1.setModel(model);
         } catch (Exception e) {
         }
-}
-private void reset(){
-    jTextField1.setEnabled(false);
-    jTextField2.setEnabled(false);
-    jComboBox2.setEnabled(false);
-    jTextField6.setEnabled(false);
-    jComboBox1.setEnabled(false);
-    jTextField7.setEnabled(false);
-    jButton5.setEnabled(false);
-    jButton6.setEnabled(false);
-    jButton7.setEnabled(false);
-    jButton2.setEnabled(true);
-    jButton3.setEnabled(true);
-    jButton4.setEnabled(true);
-
-}
-private void kosong(){
-    jComboBox1.setSelectedItem(this);
-    jTextField1.setText(null);
-    jTextField2.setText(null);
-    jComboBox2.setSelectedItem(this);
-    jTextField6.setText(null);
-    jTextField7.setText(null);
-}
-private void enable_all_TF(){
-    jTextField1.setEnabled(true);
-    jTextField2.setEnabled(true);
-    jComboBox2.setEnabled(true);
-    jTextField6.setEnabled(true);
-    jComboBox1.setEnabled(true);
-    jTextField7.setEnabled(true);
-
 }
     /**
      * @param args the command line arguments
@@ -434,14 +704,14 @@ private void enable_all_TF(){
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton7;
-    private javax.swing.JComboBox<String> jComboBox1;
-    private javax.swing.JComboBox<String> jComboBox2;
+    private javax.swing.JButton btnbatal;
+    private javax.swing.JButton btndelete;
+    private javax.swing.JButton btnedit;
+    private javax.swing.JButton btnreset;
+    private javax.swing.JButton btnsimpan;
+    private javax.swing.JButton btntambah;
+    private javax.swing.JComboBox<String> cbjkd;
+    private javax.swing.JComboBox<String> cbstatusd;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -449,13 +719,17 @@ private void enable_all_TF(){
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JOptionPane jOptionPane2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField6;
-    private javax.swing.JTextField jTextField7;
+    private javax.swing.JTextField txtidd;
+    private javax.swing.JTextField txtnamad;
+    private javax.swing.JTextField txtnohpd;
+    private javax.swing.JTextField txtpasswordd;
+    private javax.swing.JTextField txttarifd;
+    private javax.swing.JTextField txtusernamed;
     // End of variables declaration//GEN-END:variables
 }

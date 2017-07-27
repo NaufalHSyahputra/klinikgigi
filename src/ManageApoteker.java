@@ -15,6 +15,7 @@ public class ManageApoteker extends javax.swing.JFrame {
         initComponents();
         reset();
         loadTable();
+        this.setLocationRelativeTo(null);
     }
     
     public void setIDA(String v) {

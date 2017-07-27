@@ -1,4 +1,3 @@
-
 import java.sql.Connection;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
@@ -16,6 +15,13 @@ import javax.swing.table.DefaultTableModel;
  */
 public class ManageResep extends javax.swing.JFrame {
     private String[] dataPopUp;
+    private int jumlah;
+    private String keterangan;
+    private String id_obat;
+    private String kode_pemeriksaan;
+    private String status_crud;
+    private String kode_resep;
+    
 
     /**
      * Creates new form ManageResep
@@ -25,6 +31,161 @@ public class ManageResep extends javax.swing.JFrame {
         jLabel5.setVisible(false);
         jLabel6.setVisible(false);
         jLabel7.setVisible(false);
+        this.setLocationRelativeTo(null);
+    }
+    
+    public void setKodeP(String v){
+        kode_pemeriksaan = v;
+    }
+    public void setIDO(String v){
+        id_obat = v;
+    }  
+    public void setKeterangan(String v){
+        keterangan = v;
+    }
+    public void setJumlah(int v){
+        jumlah = v;
+    }
+    public void setStatusC(String v){
+        status_crud = v;
+    }
+    public void setIDR(String v){
+        kode_resep = v;
+    }
+    public String getIDR(){
+        return kode_resep;
+    }
+    public String getStatusC(){
+        return status_crud;
+    }
+    public String getKodeP(){
+        return kode_pemeriksaan;
+    }
+    public String getIDO(){
+        return id_obat;
+    }  
+    public String getKeterangan(){
+       return keterangan;
+    }
+    public int getJumlah(){
+        return jumlah;
+    }
+    public void SubmitPemeriksaan(){
+        try {
+            String sql = "UPDATE tabel_pemeriksaan SET status_pemeriksaan = 'Waiting Payment' WHERE kode_pemeriksaan = '"+getKodeP()+"'";
+            java.sql.Connection conn=(Connection)Koneksi.configDB();
+            java.sql.PreparedStatement pst=conn.prepareStatement(sql);
+            pst.execute();
+            JOptionPane.showMessageDialog(null, "Resep berhasil Di Submit!");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Resep Gagal Di Submit! "+e.getMessage());
+        }
+    }
+    private void searchPemeriksaan(String kode) {
+     try {
+      String sql = "select * from tabel_pemeriksaan WHERE kode_pemeriksaan = " + kode + "";
+      java.sql.Connection conn = (Connection) Koneksi.configDB();
+      java.sql.Statement stm = conn.createStatement();
+      java.sql.ResultSet res = stm.executeQuery(sql);
+      if (res.next()) {
+       pemeriksaanExist();
+       load_tabel();
+      } else {
+       JOptionPane.showMessageDialog(null, "Kode Pemeriksaan Tidak Ada!");
+      }
+     } catch (Exception e) {
+      JOptionPane.showMessageDialog(null, "Error : " + e);
+     }
+    }
+    private void pemeriksaanExist() {
+     txtidobat.setEnabled(false);
+     txtidobat.setText("");
+     txtjumlah.setText("");
+     txtketerangan.setText("");
+     txtjumlah.setEnabled(true);
+     txtketerangan.setEnabled(true);
+     btncari.setEnabled(true);
+     btnsimpan.setEnabled(true);
+     btnupdate.setEnabled(true);
+     btnhapus.setEnabled(true);
+     btnsubmit.setEnabled(true);
+     btnsubmit1.setEnabled(false);
+     btncari1.setEnabled(false);
+     txtkodepemeriksaan.setEnabled(false);
+     setStatusC("tambah");
+    }
+    public void load_tabel() {
+     DefaultTableModel tabelModel = new DefaultTableModel();
+     //menampilkan data database kedalam tabel
+     tabelModel.addColumn("Nama Obat");
+     tabelModel.addColumn("Jumlah");
+     tabelModel.addColumn("Keterangan");
+     tabelModel.addColumn("Harga");
+     tabelModel.addColumn("ID");
+     tabelModel.addColumn("IDObat");
+     tableresep.setModel(tabelModel);
+     try {
+      String sql = "SELECT tr.id, tr.jumlah,tr.keterangan,tob.nama_obat,tob.harga_obat,tob.id_obat FROM tabel_resep tr INNER JOIN tabel_obat tob ON tob.id_obat = tr.id_obat WHERE id_pemeriksaan = " + txtkodepemeriksaan.getText() + "";
+      java.sql.Connection conn = (Connection) Koneksi.configDB();
+      java.sql.Statement stm = conn.createStatement();
+      java.sql.ResultSet res = stm.executeQuery(sql);
+      while (res.next()) {
+       tabelModel.addRow(new Object[] {
+        res.getString(4), res.getString(2), res.getString(3), res.getString(5), res.getString(1), res.getString(6)
+       });
+      }
+      tableresep.setModel(tabelModel);
+     } catch (Exception e) {}
+     tableresep.getColumnModel().getColumn(3).setWidth(0);
+     tableresep.getColumnModel().getColumn(3).setMinWidth(0);
+     tableresep.getColumnModel().getColumn(3).setMaxWidth(0);
+     tableresep.getColumnModel().getColumn(4).setWidth(0);
+     tableresep.getColumnModel().getColumn(4).setMinWidth(0);
+     tableresep.getColumnModel().getColumn(4).setMaxWidth(0);
+     tableresep.getColumnModel().getColumn(5).setWidth(0);
+     tableresep.getColumnModel().getColumn(5).setMinWidth(0);
+     tableresep.getColumnModel().getColumn(5).setMaxWidth(0);
+    }
+    public void setDataPopUp(String[] dataPopUp) {
+     this.dataPopUp = dataPopUp;
+    }
+
+    public String[] getDataPopUp() {
+     return dataPopUp;
+    }
+    public void Insert(){
+        try {
+            String sql = "INSERT INTO tabel_resep(id_pemeriksaan,id_obat,jumlah,harga,keterangan) VALUES ('"+getKodeP()+"','"+getIDO()+"','"+getJumlah()+"','"+jLabel6.getText()+"','"+getKeterangan()+"')"; //jlabel6 = harga
+            java.sql.Connection conn=(Connection)Koneksi.configDB();
+            java.sql.PreparedStatement pst=conn.prepareStatement(sql);
+            pst.execute();
+            JOptionPane.showMessageDialog(null, "Penyimpanan Data Berhasil");
+            pemeriksaanExist();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        }
+    }
+    public void Update(){
+           try {
+            String sql ="UPDATE tabel_resep SET jumlah = '"+getJumlah()+"', keterangan = '"+getKeterangan()+"' WHERE id = '"+getIDR()+"'"; //jLabel7 = id_obat
+            java.sql.Connection conn=(Connection)Koneksi.configDB();
+            java.sql.PreparedStatement pst=conn.prepareStatement(sql);
+            pst.execute();
+            JOptionPane.showMessageDialog(null, "data berhasil di edit");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Perubahan Data Gagal"+e.getMessage());
+        }
+    }
+    public void Delete(){
+            try {
+            String sql ="DELETE FROM tabel_resep where id='"+getIDR()+"'";//jLabel7 = id_obat
+            java.sql.Connection conn=(Connection)Koneksi.configDB();
+            java.sql.PreparedStatement pst=conn.prepareStatement(sql);
+            pst.execute();
+            JOptionPane.showMessageDialog(this, "berhasil di hapus");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        }
     }
 
     /**
@@ -74,6 +235,11 @@ public class ManageResep extends javax.swing.JFrame {
         jLabel1.setText("Kode Pemeriksaan");
 
         txtkodepemeriksaan.setEnabled(false);
+        txtkodepemeriksaan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtkodepemeriksaanActionPerformed(evt);
+            }
+        });
 
         btncari1.setText("Cari");
         btncari1.addActionListener(new java.awt.event.ActionListener() {
@@ -122,6 +288,11 @@ public class ManageResep extends javax.swing.JFrame {
 
         txtidobat.setEnabled(false);
         txtidobat.setFocusCycleRoot(true);
+        txtidobat.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtidobatActionPerformed(evt);
+            }
+        });
 
         btncari.setText("Cari");
         btncari.setEnabled(false);
@@ -136,10 +307,25 @@ public class ManageResep extends javax.swing.JFrame {
 
         txtjumlah.setEnabled(false);
         txtjumlah.setFocusCycleRoot(true);
+        txtjumlah.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtjumlahActionPerformed(evt);
+            }
+        });
+        txtjumlah.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtjumlahKeyReleased(evt);
+            }
+        });
 
         jLabel4.setText("Keterangan");
 
         txtketerangan.setEnabled(false);
+        txtketerangan.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtketeranganKeyReleased(evt);
+            }
+        });
         jScrollPane2.setViewportView(txtketerangan);
 
         tableresep.setModel(new javax.swing.table.DefaultTableModel(
@@ -210,33 +396,34 @@ public class ManageResep extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(btnsubmit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel2))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(txtidobat)
-                            .addComponent(txtjumlah, javax.swing.GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btncari)
-                            .addComponent(jLabel6)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(btnsubmit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel3)
+                                .addComponent(jLabel2))
+                            .addGap(18, 18, 18)
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(txtidobat)
+                                .addComponent(txtjumlah, javax.swing.GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(btncari)
+                                .addComponent(jLabel6)))
+                        .addGroup(jPanel2Layout.createSequentialGroup()
+                            .addComponent(btnsimpan, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(btnupdate, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(btnhapus, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel4)
                             .addComponent(jLabel7))
-                        .addGap(18, 18, 18)
-                        .addComponent(jScrollPane2))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(btnsimpan, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnupdate, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnhapus, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGap(22, 22, 22)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 494, Short.MAX_VALUE)
                 .addContainerGap())
         );
@@ -256,14 +443,17 @@ public class ManageResep extends javax.swing.JFrame {
                             .addComponent(jLabel3)
                             .addComponent(txtjumlah, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel6))
-                        .addGap(9, 9, 9)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(9, 9, 9)
                                 .addComponent(jLabel4)
                                 .addGap(18, 18, 18)
-                                .addComponent(jLabel7))
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(10, 10, 10)
+                                .addComponent(jLabel7)
+                                .addGap(54, 54, 54))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)))
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(btnsimpan, javax.swing.GroupLayout.DEFAULT_SIZE, 42, Short.MAX_VALUE)
                             .addComponent(btnupdate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -307,14 +497,14 @@ public class ManageResep extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnsubmit1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnsubmit1ActionPerformed
-        String kode = txtkodepemeriksaan.getText().toString();
-        searchPemeriksaan(kode);
+        setKodeP(txtkodepemeriksaan.getText());
+        searchPemeriksaan(getKodeP());
     }//GEN-LAST:event_btnsubmit1ActionPerformed
 
     private void btnupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnupdateActionPerformed
         txtidobat.setEnabled(false);
         btncari.setEnabled(false);
-        jLabel5.setText("update");
+        setStatusC("update");
         btnhapus.setEnabled(false);
         btnsubmit.setEnabled(false);
     }//GEN-LAST:event_btnupdateActionPerformed
@@ -325,7 +515,7 @@ public class ManageResep extends javax.swing.JFrame {
         txtjumlah.setEnabled(false);
         txtketerangan.setEnabled(false);
         btnsimpan.setText("Delete");
-        jLabel5.setText("hapus");
+        setStatusC("hapus");
         btnsubmit.setEnabled(false);
     }//GEN-LAST:event_btnhapusActionPerformed
 
@@ -333,47 +523,24 @@ public class ManageResep extends javax.swing.JFrame {
         ResepPemeriksaan rp = new ResepPemeriksaan(new javax.swing.JFrame(), true);
         rp.setVisible(true);
         txtkodepemeriksaan.setText(rp.getAmbilData()[0]);
+        setKodeP(rp.getAmbilData()[0]);
     }//GEN-LAST:event_btncari1ActionPerformed
 
     private void btncariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btncariActionPerformed
         ResepObat ro = new ResepObat(new javax.swing.JFrame(), true);
         ro.setVisible(true);
         txtidobat.setText(ro.getAmbilData()[0]);
+        setIDO(ro.getAmbilData()[0]);
         jLabel6.setText(ro.getAmbilData()[1]);
     }//GEN-LAST:event_btncariActionPerformed
 
     private void btnsimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnsimpanActionPerformed
-       if(jLabel5.getText() == "tambah"){
-        try {
-            String sql = "INSERT INTO tabel_resep(id_pemeriksaan,id_obat,jumlah,harga,keterangan) VALUES ('"+txtkodepemeriksaan.getText()+"','"+txtidobat.getText()+"','"+txtjumlah.getText()+"','"+jLabel6.getText()+"','"+txtketerangan.getText()+"')";
-            java.sql.Connection conn=(Connection)Koneksi.configDB();
-            java.sql.PreparedStatement pst=conn.prepareStatement(sql);
-            pst.execute();
-            JOptionPane.showMessageDialog(null, "Penyimpanan Data Berhasil");
-            pemeriksaanExist();
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, e.getMessage());
-        }
-        }else if(jLabel5.getText() == "update"){
-           try {
-            String sql ="UPDATE tabel_resep SET jumlah = '"+txtjumlah.getText()+"', keterangan = '"+txtketerangan.getText()+"' WHERE id = '"+jLabel7.getText()+"'";
-            java.sql.Connection conn=(Connection)Koneksi.configDB();
-            java.sql.PreparedStatement pst=conn.prepareStatement(sql);
-            pst.execute();
-            JOptionPane.showMessageDialog(null, "data berhasil di edit");
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Perubahan Data Gagal"+e.getMessage());
-        }
-        }else if(jLabel5.getText() == "hapus"){
-            try {
-            String sql ="DELETE FROM tabel_resep where id='"+jLabel7.getText()+"'";
-            java.sql.Connection conn=(Connection)Koneksi.configDB();
-            java.sql.PreparedStatement pst=conn.prepareStatement(sql);
-            pst.execute();
-            JOptionPane.showMessageDialog(this, "berhasil di hapus");
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, e.getMessage());
-        }
+       if(getStatusC() == "tambah"){
+            Insert();
+        }else if(getStatusC() == "update"){
+                Update();
+        }else if(getStatusC() == "hapus"){
+            Delete();
         }
         load_tabel();
         pemeriksaanExist();
@@ -388,104 +555,49 @@ public class ManageResep extends javax.swing.JFrame {
     }//GEN-LAST:event_btnsimpanMouseClicked
 
     private void tableresepMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableresepMouseClicked
-      if(jLabel5.getText() == "update" || jLabel5.getText() == "hapus"){
+      if(getStatusC() == "update" || getStatusC() == "hapus"){
         int baris = tableresep.rowAtPoint(evt.getPoint());
         String txt_jumlah =tableresep.getValueAt(baris, 1).toString();
         txtjumlah.setText(txt_jumlah);
+        setJumlah(Integer.parseInt(txt_jumlah));
         String txt_keterangan =tableresep.getValueAt(baris, 2).toString();
         txtketerangan.setText(txt_keterangan);
+        setKeterangan(txt_keterangan);
         String id_resep = tableresep.getValueAt(baris, 4).toString();
         jLabel7.setText(id_resep);
+        setIDR(id_resep);
+        String id_obat = tableresep.getValueAt(baris, 5).toString();
+                txtidobat.setText(id_obat);
+        setIDO(id_obat);
       }
     }//GEN-LAST:event_tableresepMouseClicked
 
     private void btnsubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnsubmitActionPerformed
         int confirmation = JOptionPane.showConfirmDialog(null, "Anda Yakin?", "Konfirmasi Resep", JOptionPane.YES_NO_OPTION);
         if(confirmation == 0){
-        try {
-            String sql ="UPDATE tabel_pemeriksaan SET status_pemeriksaan = 'Waiting Payment' WHERE kode_pemeriksaan = '"+txtkodepemeriksaan.getText()+"'";
-            java.sql.Connection conn=(Connection)Koneksi.configDB();
-            java.sql.PreparedStatement pst=conn.prepareStatement(sql);
-            pst.execute();
-            JOptionPane.showMessageDialog(null, "Resep berhasil Di Submit!");
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Resep Gagal Di Submit! "+e.getMessage());
-        }
+            SubmitPemeriksaan();
         }
     }//GEN-LAST:event_btnsubmitActionPerformed
 
-    
-    private void searchPemeriksaan(String kode){
-        try{
-            String sql = "select * from tabel_pemeriksaan WHERE kode_pemeriksaan = "+kode+"";
-            java.sql.Connection conn=(Connection)Koneksi.configDB();
-            java.sql.Statement stm=conn.createStatement();
-            java.sql.ResultSet res=stm.executeQuery(sql);
-            if(res.next())
-            {
-                pemeriksaanExist();
-                load_tabel();
-            }else{
-                JOptionPane.showMessageDialog(null, "Kode Pemeriksaan Tidak Ada!");
-            }
-        }catch(Exception e){
-            JOptionPane.showMessageDialog(null, "Error : "+e);
-        }
-    }
-    private void pemeriksaanExist(){
-        txtidobat.setEnabled(false);
-        txtidobat.setText("");
-        txtjumlah.setText("");
-        txtketerangan.setText("");
-        txtjumlah.setEnabled(true);
-        txtketerangan.setEnabled(true);
-        btncari.setEnabled(true);
-        btnsimpan.setEnabled(true);
-        btnupdate.setEnabled(true);
-        btnhapus.setEnabled(true);
-        btnsubmit.setEnabled(true);
-        btnsubmit1.setEnabled(false);
-        btncari1.setEnabled(false);
-        txtkodepemeriksaan.setEnabled(false);
-        jLabel5.setText("tambah");
-    }
-public void load_tabel()
-	{
-        DefaultTableModel tabelModel = new DefaultTableModel();
-        //menampilkan data database kedalam tabel
-        tabelModel.addColumn("Nama Obat");
-        tabelModel.addColumn("Jumlah");
-        tabelModel.addColumn("Keterangan");
-        tabelModel.addColumn("Harga");
-        tabelModel.addColumn("ID");
-        tableresep.setModel(tabelModel);
-        try {
-            String sql = "SELECT tr.id, tr.jumlah,tr.keterangan,tob.nama_obat,tob.harga_obat FROM tabel_resep tr INNER JOIN tabel_obat tob ON tob.id_obat = tr.id_obat WHERE id_pemeriksaan = "+txtkodepemeriksaan.getText()+"";
-            java.sql.Connection conn=(Connection)Koneksi.configDB();
-            java.sql.Statement stm=conn.createStatement();
-            java.sql.ResultSet res=stm.executeQuery(sql);
-            while(res.next()){
-                tabelModel.addRow(new Object[]{res.getString(4),res.getString(2),res.getString(3),res.getString(5),res.getString(1)});
-            }
-            tableresep.setModel(tabelModel);
-        } catch (Exception e) {
-        }
-            tableresep.getColumnModel().getColumn(3).setWidth(0);
-            tableresep.getColumnModel().getColumn(3).setMinWidth(0);
-            tableresep.getColumnModel().getColumn(3).setMaxWidth(0); 
-            tableresep.getColumnModel().getColumn(4).setWidth(0);
-            tableresep.getColumnModel().getColumn(4).setMinWidth(0);
-            tableresep.getColumnModel().getColumn(4).setMaxWidth(0); 
-	}        
-    public void setDataPopUp(String[] dataPopUp)
-    {
-        this.dataPopUp = dataPopUp;
-    }
-	
-    public String[] getDataPopUp()
-    {
-        return dataPopUp;
-    }
+    private void txtkodepemeriksaanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtkodepemeriksaanActionPerformed
+        setKodeP(txtkodepemeriksaan.getText());
+    }//GEN-LAST:event_txtkodepemeriksaanActionPerformed
+
+    private void txtidobatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtidobatActionPerformed
+        setIDO(txtidobat.getText());
+    }//GEN-LAST:event_txtidobatActionPerformed
+
+    private void txtjumlahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtjumlahActionPerformed
+
+    }//GEN-LAST:event_txtjumlahActionPerformed
+
+    private void txtketeranganKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtketeranganKeyReleased
+        setKeterangan(txtketerangan.getText());
+    }//GEN-LAST:event_txtketeranganKeyReleased
+
+    private void txtjumlahKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtjumlahKeyReleased
+        setJumlah(Integer.parseInt(txtjumlah.getText()));
+    }//GEN-LAST:event_txtjumlahKeyReleased
     /**
      * @param args the command line arguments
      */

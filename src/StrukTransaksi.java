@@ -28,9 +28,12 @@ public class StrukTransaksi extends javax.swing.JFrame {
      */
     public StrukTransaksi() {
         initComponents();
+        this.setLocationRelativeTo(null);
     }
     public StrukTransaksi(String data){
         initComponents();
+        this.setLocationRelativeTo(null);
+        setIDP(data);
     }
     
     public void setIDP(String v){

@@ -20,14 +20,29 @@ public class Transaksi extends javax.swing.JFrame {
     private int gtot=0;
     private int ppn=0;
     private int kembali=0;
-    private int jumlah=0;
+    private int jumlah=0; //jumlah bayar
+    private String kodepemeriksaan;
+    
     /**
      * Creates new form Transaksi
      */
     public Transaksi() {
         initComponents();
+        this.setLocationRelativeTo(null);
+    }
+    public void setKodePemeriksaan(String v){
+        kodepemeriksaan = v;
     }
 
+    public String getKodePemeriksaan(){
+        return kodepemeriksaan;
+    }
+    public void setJumlah(int v){
+        jumlah = v;
+    }
+    public int getJumlah(){
+        return jumlah;
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -59,7 +74,7 @@ public class Transaksi extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
         jLabel16 = new javax.swing.JLabel();
         jLabel17 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        txtbayar = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -186,13 +201,18 @@ public class Transaksi extends javax.swing.JFrame {
         jLabel17.setText("Rp. 0,00");
         jPanel2.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 180, 195, 44));
 
-        jTextField1.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        jTextField1.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                jTextField1KeyReleased(evt);
+        txtbayar.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        txtbayar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtbayarActionPerformed(evt);
             }
         });
-        jPanel2.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 290, 240, 30));
+        txtbayar.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtbayarKeyReleased(evt);
+            }
+        });
+        jPanel2.add(txtbayar, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 290, 240, 30));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -233,21 +253,20 @@ public class Transaksi extends javax.swing.JFrame {
     private void btncari1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btncari1ActionPerformed
         TransaksiPemeriksaan tp = new TransaksiPemeriksaan(new javax.swing.JFrame(), true);
         tp.setVisible(true);
+        setKodePemeriksaan(tp.getAmbilData()[0]);
         txtkodepemeriksaan.setText(tp.getAmbilData()[0]);
     }//GEN-LAST:event_btncari1ActionPerformed
 
     private void btnsubmit1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnsubmit1ActionPerformed
-        String kode = txtkodepemeriksaan.getText();
-        searchPemeriksaan(kode);
+        searchPemeriksaan(getKodePemeriksaan());
     }//GEN-LAST:event_btnsubmit1ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        String kode = txtkodepemeriksaan.getText();
-        new TransaksiObat(kode).setVisible(true);
+        new TransaksiObat(getKodePemeriksaan()).setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void jTextField1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyReleased
-        jumlah = Integer.valueOf(jTextField1.getText());
+    private void txtbayarKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtbayarKeyReleased
+        jumlah = Integer.valueOf(txtbayar.getText());
         if(jumlah<gtot){
             jButton2.setEnabled(false);
         }else{
@@ -255,13 +274,13 @@ public class Transaksi extends javax.swing.JFrame {
             kembali=jumlah-gtot;
             jLabel14.setText(setCurrency(kembali));
         }
-    }//GEN-LAST:event_jTextField1KeyReleased
+    }//GEN-LAST:event_txtbayarKeyReleased
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = new Date();  
         try {
-            String sql = "INSERT INTO tabel_transaksi(id_pemeriksaan,total_bayar,tanggal_bayar) VALUES ('"+txtkodepemeriksaan.getText()+"','"+jTextField1.getText()+"','"+dateFormat.format(date)+"')";
+            String sql = "INSERT INTO tabel_transaksi(id_pemeriksaan,total_bayar,tanggal_bayar) VALUES ('"+txtkodepemeriksaan.getText()+"','"+txtbayar.getText()+"','"+dateFormat.format(date)+"')";
             String sql2 = "UPDATE tabel_pemeriksaan SET status_pemeriksaan = 'Success' WHERE kode_pemeriksaan = '"+txtkodepemeriksaan.getText()+"'";
             java.sql.Connection conn=(Connection)Koneksi.configDB();
             java.sql.PreparedStatement pst=conn.prepareStatement(sql);
@@ -274,6 +293,10 @@ public class Transaksi extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, e.getMessage());
         }
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void txtbayarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtbayarActionPerformed
+        setJumlah(Integer.parseInt(txtbayar.getText()));
+    }//GEN-LAST:event_txtbayarActionPerformed
 
         private void searchPemeriksaan(String kode){
         try{
@@ -363,7 +386,7 @@ public class Transaksi extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField txtbayar;
     public javax.swing.JTextField txtkodepemeriksaan;
     // End of variables declaration//GEN-END:variables
 }

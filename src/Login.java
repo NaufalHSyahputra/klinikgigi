@@ -1,6 +1,8 @@
 import java.sql.Connection;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-
+import java.awt.event.*;
+import java.awt.*;
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -33,7 +35,6 @@ public class Login extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
 
         jLabel1.setText("Username");
@@ -41,6 +42,12 @@ public class Login extends javax.swing.JFrame {
         txtusername.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtusernameActionPerformed(evt);
+            }
+        });
+
+        txtpassword.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtpasswordActionPerformed(evt);
             }
         });
 
@@ -56,6 +63,11 @@ public class Login extends javax.swing.JFrame {
         });
 
         cbjabatan.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Dokter", "Customer Service", "Apoteker", "Admin" }));
+        cbjabatan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbjabatanActionPerformed(evt);
+            }
+        });
 
         jLabel3.setText("Jabatan");
 
@@ -69,31 +81,27 @@ public class Login extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(3, 3, 3)
-                                .addComponent(jLabel3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(cbjabatan, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtusername))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(2, 2, 2)
-                                .addComponent(jLabel2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtpassword))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(btnlogin, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel5)))
+                        .addGap(3, 3, 3)
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(cbjabatan, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtusername))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(2, 2, 2)
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtpassword))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnlogin, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel5))
                 .addContainerGap())
             .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -134,6 +142,7 @@ public class Login extends javax.swing.JFrame {
     
     public Login() {
         initComponents();
+        this.setLocationRelativeTo(null);
     }
     public void setUsername(String v){
         username = v;
@@ -153,6 +162,10 @@ public class Login extends javax.swing.JFrame {
     public String getJabatan(){
         return jabatan;
     }
+public void close() { 
+    this.setVisible(false);
+    this.dispose();
+}
     private void btnloginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnloginActionPerformed
         setUsername(txtusername.getText());
         setPassword(txtpassword.getText());
@@ -168,13 +181,10 @@ public class Login extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnloginActionPerformed
 
-    private void txtusernameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtusernameActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtusernameActionPerformed
-
+    
     public void LoginAsAdmin(String u, String p){
         try{
-            String sql = "select * from tabel_admin WHERE username = "+u+" AND password = '"+p+"'";
+            String sql = "select * from tabel_admin WHERE username = '"+u+"' AND password = '"+p+"'";
             java.sql.Connection conn=(Connection)Koneksi.configDB();
             java.sql.Statement stm=conn.createStatement();
             java.sql.ResultSet res=stm.executeQuery(sql);
@@ -182,6 +192,7 @@ public class Login extends javax.swing.JFrame {
             {
                 JOptionPane.showMessageDialog(null, "Selamat Datang Admin");
                 new MenuAdmin().setVisible(true);
+                close();
                 
             }else{
                 JOptionPane.showMessageDialog(null, "Username Atau Password Salah");
@@ -192,7 +203,7 @@ public class Login extends javax.swing.JFrame {
     }
     public void LoginAsCS(String u, String p){
         try{
-            String sql = "select * from tabel_customerservice WHERE username = "+u+" AND password = '"+p+"'";
+            String sql = "select * from tabel_customerservice WHERE username = '"+u+"' AND password = '"+p+"'";
             java.sql.Connection conn=(Connection)Koneksi.configDB();
             java.sql.Statement stm=conn.createStatement();
             java.sql.ResultSet res=stm.executeQuery(sql);
@@ -209,7 +220,7 @@ public class Login extends javax.swing.JFrame {
     }
     public void LoginAsDokter(String u, String p){
         try{
-            String sql = "select * from tabel_dokter WHERE username = "+u+" AND password = '"+p+"'";
+            String sql = "select * from tabel_dokter WHERE username = '"+u+"' AND password = '"+p+"'";
             java.sql.Connection conn=(Connection)Koneksi.configDB();
             java.sql.Statement stm=conn.createStatement();
             java.sql.ResultSet res=stm.executeQuery(sql);
@@ -218,6 +229,7 @@ public class Login extends javax.swing.JFrame {
                 
                 JOptionPane.showMessageDialog(null, "Selamat Datang Dokter !");
                 new MenuDokter().setVisible(true);
+                close();
             }else{
                 JOptionPane.showMessageDialog(null, "Username Atau Password Salah");
             }
@@ -225,9 +237,10 @@ public class Login extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Error : "+e);
         }
     }
+    
     public void LoginAsApoteker(String u, String p){
         try{
-            String sql = "select * from tabel_apoteker WHERE username = "+u+" AND password = '"+p+"'";
+            String sql = "select * from tabel_apoteker WHERE username = '"+u+"' AND password = '"+p+"'";
             java.sql.Connection conn=(Connection)Koneksi.configDB();
             java.sql.Statement stm=conn.createStatement();
             java.sql.ResultSet res=stm.executeQuery(sql);
@@ -235,6 +248,7 @@ public class Login extends javax.swing.JFrame {
             {
                 JOptionPane.showMessageDialog(null, "Selamat Datang Apoteker!");
                 new MenuApoteker().setVisible(true);
+                close();
             }else{
                 JOptionPane.showMessageDialog(null, "Username Atau Password Salah");
             }
@@ -242,6 +256,18 @@ public class Login extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Error : "+e);
         }
     }   
+    
+    private void txtusernameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtusernameActionPerformed
+        setUsername(txtusername.getText());
+    }//GEN-LAST:event_txtusernameActionPerformed
+
+    private void txtpasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtpasswordActionPerformed
+        setPassword(txtpassword.getText());
+    }//GEN-LAST:event_txtpasswordActionPerformed
+
+    private void cbjabatanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbjabatanActionPerformed
+        setJabatan(cbjabatan.getSelectedItem().toString());
+    }//GEN-LAST:event_cbjabatanActionPerformed
     /**
      * @param args the command line arguments
      */

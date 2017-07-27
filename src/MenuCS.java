@@ -18,6 +18,7 @@ public class MenuCS extends javax.swing.JFrame {
      */
     public MenuCS() {
         initComponents();
+        this.setLocationRelativeTo(null);
     }
 
     /**
@@ -50,6 +51,11 @@ public class MenuCS extends javax.swing.JFrame {
         jMenu1.setText("Manage");
 
         jMenuItem1.setText("Input Pasien");
+        jMenuItem1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jMenuItem1MouseClicked(evt);
+            }
+        });
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem1ActionPerformed(evt);
@@ -58,6 +64,11 @@ public class MenuCS extends javax.swing.JFrame {
         jMenu1.add(jMenuItem1);
 
         jMenuItem3.setText("Input Pemeriksaan");
+        jMenuItem3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jMenuItem3MouseClicked(evt);
+            }
+        });
         jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem3ActionPerformed(evt);
@@ -68,9 +79,9 @@ public class MenuCS extends javax.swing.JFrame {
         jMenuBar1.add(jMenu1);
 
         jMenu2.setText("Logout");
-        jMenu2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenu2ActionPerformed(evt);
+        jMenu2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jMenu2MouseClicked(evt);
             }
         });
         jMenuBar1.add(jMenu2);
@@ -91,6 +102,21 @@ public class MenuCS extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jMenuItem1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuItem1MouseClicked
+
+    }//GEN-LAST:event_jMenuItem1MouseClicked
+
+    private void jMenuItem3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuItem3MouseClicked
+
+    }//GEN-LAST:event_jMenuItem3MouseClicked
+
+    private void jMenu2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu2MouseClicked
+        this.setVisible(false);
+        this.dispose();
+        Login log = new Login();
+        log.setVisible(true);
+    }//GEN-LAST:event_jMenu2MouseClicked
+
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         ManagePasien mp = new ManagePasien();
         mp.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -102,11 +128,6 @@ public class MenuCS extends javax.swing.JFrame {
         mp.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         mp.setVisible(true);
     }//GEN-LAST:event_jMenuItem3ActionPerformed
-
-    private void jMenu2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu2ActionPerformed
-        Login log = new Login();
-        log.setVisible(true);
-    }//GEN-LAST:event_jMenu2ActionPerformed
 
     /**
      * @param args the command line arguments

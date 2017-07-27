@@ -20,10 +20,17 @@ import javax.swing.table.*;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-import org.freixas.jcalendar.*;
 public class ManagePemeriksaan extends javax.swing.JFrame {
 
     private String[] dataPopUp;
+    private String id_dokter;
+    private String nama_dokter;
+    private String id_pasien;
+    private String nama_pasien;
+    private String id_pemeriksaan;
+    private String tanggal;
+    private String status="Pending";
+    private String status_crud;
     /**
      * Creates new form ManagePasien
      */
@@ -31,8 +38,135 @@ public class ManagePemeriksaan extends javax.swing.JFrame {
         initComponents();
         reset();
         load_table();
+        this.setLocationRelativeTo(null);
     }
-
+    public void setIDD(String v){
+        id_dokter = v;
+    }
+    public void setIDP(String v){
+        id_pasien = v;
+    }  
+    public void setIDPE(String v){
+        id_pemeriksaan = v;
+    } 
+    public void setNamaD(String v){
+        nama_dokter = v;
+    }
+    public void setNamaP(String v){
+        nama_pasien = v;
+    }
+    public void setTanggal(String v){
+        tanggal = v;
+    }
+    public void setStatus(String v){
+        status = v;
+    }
+    public void setStatusC(String v){
+        status_crud = v;
+    }
+    public String getIDD(){
+        return id_dokter;
+    }
+    public String getIDP(){
+        return id_pasien;
+    }  
+    public String getIDPE(){
+        return id_pemeriksaan;
+    } 
+    public String getNamaD(){
+        return nama_dokter;
+    }
+    public String getNamaP(){
+       return nama_pasien;
+    }
+    public String getTanggal(){
+       return tanggal;
+    }
+    public String getStatus(){
+        return status;
+    }
+    public String getStatusC(){
+        return status_crud;
+    }     
+        //batal
+    public void batal() {
+     txtiddokter.setEnabled(false);
+     txtnamadokter.setEnabled(false);
+     txtidpasien.setEnabled(false);
+     txtnamapasien.setEnabled(false);
+     txtid.setEnabled(false);
+     txttanggal.setEnabled(false);
+     txtjam.setEnabled(false);
+     cboxstatus.setEnabled(false);
+     btnreset.setEnabled(false);
+     btnbatal.setEnabled(false);
+     btnsimpan.setEnabled(false);
+     btnhapus.setEnabled(true);
+     btnedit.setEnabled(true);
+     btntambah.setEnabled(true);
+     setStatusC("");
+     reset();
+    }
+    //reset
+    public void reset() {
+     txtiddokter.setText(null);
+     txtnamadokter.setText(null);
+     txtidpasien.setText(null);
+     txtnamapasien.setText(null);
+     txtid.setText(null);
+    }
+    //Dipanggil Saat ingin mengenable semua text Field
+    public void enableAllTF() {
+     txtid.setEnabled(true);
+     txttanggal.setEnabled(true);
+     txtjam.setEnabled(true);
+     cboxstatus.setEnabled(true);
+    }
+    public void insertData() {
+        try {
+            String sql = "INSERT INTO tabel_pemeriksaan(id_dokter,id_pasien,tanggal_pemeriksaan,status_pemeriksaan) VALUES ('"+getIDD()+"','"+getIDP()+"','"+getTanggal()+"','"+getStatus()+"')";
+            java.sql.Connection conn=(Connection)Koneksi.configDB();
+            java.sql.PreparedStatement pst=conn.prepareStatement(sql);
+            pst.execute();
+            JOptionPane.showMessageDialog(null, "Penyimpanan Data Berhasil");
+            reset();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        }
+    }
+    public void updateData() {
+           try {
+            String sql ="UPDATE tabel_pemeriksaan SET id_dokter = '"+getIDD()+"', id_pasien = '"+getIDP()+"',tanggal_pemeriksaan = '"+getTanggal()+"',status_pemeriksaan= '"+getStatus()+"' WHERE kode_pemeriksaan = '"+getIDPE()+"'";
+            java.sql.Connection conn=(Connection)Koneksi.configDB();
+            java.sql.PreparedStatement pst=conn.prepareStatement(sql);
+            pst.execute();
+            JOptionPane.showMessageDialog(null, "data berhasil di edit");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Perubahan Data Gagal"+e.getMessage());
+        }
+    }
+    public void deleteData() {
+            try {
+            String sql ="DELETE FROM tabel_pemeriksaan where kode_pemeriksaan='"+getIDPE()+"'";
+            java.sql.Connection conn=(Connection)Koneksi.configDB();
+            java.sql.PreparedStatement pst=conn.prepareStatement(sql);
+            pst.execute();
+            JOptionPane.showMessageDialog(this, "berhasil di hapus");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        }
+    }
+    public boolean verifikasiData(){
+        if(getIDP() == ""){
+            JOptionPane.showMessageDialog(this, "Pasien Masih Kosong");
+            return false;
+        }else if(getIDD() == ""){
+            JOptionPane.showMessageDialog(this, "Dokter Masih Kosong");
+            return false;
+        }else{
+            return true;
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -82,11 +216,6 @@ public class ManagePemeriksaan extends javax.swing.JFrame {
         jLabel1.setText("ID Pasien");
 
         txtidpasien.setEnabled(false);
-        txtidpasien.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                txtidpasienMousePressed(evt);
-            }
-        });
         txtidpasien.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtidpasienActionPerformed(evt);
@@ -185,6 +314,7 @@ public class ManagePemeriksaan extends javax.swing.JFrame {
         });
 
         btnsimpan.setText("Simpan");
+        btnsimpan.setEnabled(false);
         btnsimpan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnsimpanActionPerformed(evt);
@@ -192,19 +322,26 @@ public class ManagePemeriksaan extends javax.swing.JFrame {
         });
 
         btnbatal.setText("Batal");
+        btnbatal.setEnabled(false);
+        btnbatal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnbatalActionPerformed(evt);
+            }
+        });
 
         btnreset.setText("Reset");
+        btnreset.setEnabled(false);
+        btnreset.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnresetActionPerformed(evt);
+            }
+        });
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Data Dokter"));
 
         jLabel8.setText("ID Dokter");
 
         txtiddokter.setEnabled(false);
-        txtiddokter.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                txtiddokterMouseClicked(evt);
-            }
-        });
         txtiddokter.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtiddokterActionPerformed(evt);
@@ -272,18 +409,38 @@ public class ManagePemeriksaan extends javax.swing.JFrame {
         jLabel4.setText("Status");
 
         cboxstatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Pending", "On Process", "Waiting Payment", "Success", "Cancel" }));
+        cboxstatus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboxstatusActionPerformed(evt);
+            }
+        });
 
         jLabel5.setText("ID Pemeriksaan");
 
         txtid.setEnabled(false);
+        txtid.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtidActionPerformed(evt);
+            }
+        });
 
         JSpinner.DateEditor timeEditor = new JSpinner.DateEditor(txtjam, "HH:mm:ss");
         txtjam.setEditor(timeEditor);
         // will only show the current time
         txtjam.setEnabled(false);
+        txtjam.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtjamKeyReleased(evt);
+            }
+        });
 
         txttanggal.setEnabled(false);
         txttanggal.setFormats(new String[]{"yyyy-MM-dd"});
+        txttanggal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txttanggalActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -351,11 +508,9 @@ public class ManagePemeriksaan extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 860, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 19, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -384,7 +539,7 @@ public class ManagePemeriksaan extends javax.swing.JFrame {
 
     
     private void btntambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btntambahActionPerformed
-        txtid.setEnabled(true);
+        txtid.setEnabled(false);
         txttanggal.setEnabled(true);
         txtjam.setEnabled(true);
         cboxstatus.setEnabled(true);
@@ -398,49 +553,34 @@ public class ManagePemeriksaan extends javax.swing.JFrame {
         btnreset.setEnabled(true);
         btnbatal.setEnabled(true);
         btnsimpan.setEnabled(true);
-        jLabel7.setText("tambah");
+        setStatusC("tambah");
     }//GEN-LAST:event_btntambahActionPerformed
 
     private void btnsimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnsimpanActionPerformed
-        if(jLabel7.getText() == "tambah"){
-        try {
-            String sql = "INSERT INTO tabel_pemeriksaan(id_dokter,id_pasien,tanggal_pemeriksaan,status_pemeriksaan) VALUES ('"+txtiddokter.getText()+"','"+txtidpasien.getText()+"','"+Tanggalan()+"','"+cboxstatus.getSelectedItem()+"')";
-            java.sql.Connection conn=(Connection)Koneksi.configDB();
-            java.sql.PreparedStatement pst=conn.prepareStatement(sql);
-            pst.execute();
-            JOptionPane.showMessageDialog(null, "Penyimpanan Data Berhasil");
-            reset();
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, e.getMessage());
+        if (getStatusC() == "tambah") {
+            if(verifikasiData() == true){
+                insertData();
+                load_table();
+                batal();
+            }
+        } else if (getStatusC() == "edit") {
+            if(verifikasiData() == true){
+                updateData(); 
+                load_table();
+                batal();
+            }
+        } else if (getStatusC() == "hapus") {
+            if(verifikasiData() == true){
+                deleteData();  
+                load_table();
+                batal();
+            }
         }
-        }else if(jLabel7.getText() == "edit"){
-           try {
-            String sql ="UPDATE tabel_pemeriksaan SET id_dokter = '"+txtiddokter.getText()+"', id_pasien = '"+txtidpasien.getText()+"',tanggal_pemeriksaan = '"+Tanggalan()+"',status_pemeriksaaan= '"+cboxstatus.getSelectedItem()+"' WHERE kode_pemeriksaan = '"+txtid.getText()+"'";
-            java.sql.Connection conn=(Connection)Koneksi.configDB();
-            java.sql.PreparedStatement pst=conn.prepareStatement(sql);
-            pst.execute();
-            JOptionPane.showMessageDialog(null, "data berhasil di edit");
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Perubahan Data Gagal"+e.getMessage());
-        }
-        }else if(jLabel7.getText() == "hapus"){
-            try {
-            String sql ="DELETE FROM tabel_pemeriksaan where kode_pemeriksaan='"+txtid.getText()+"'";
-            java.sql.Connection conn=(Connection)Koneksi.configDB();
-            java.sql.PreparedStatement pst=conn.prepareStatement(sql);
-            pst.execute();
-            JOptionPane.showMessageDialog(this, "berhasil di hapus");
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, e.getMessage());
-        }
-        }
-        load_table();
-        kosong();
     }//GEN-LAST:event_btnsimpanActionPerformed
 
     private void btneditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btneditActionPerformed
         JOptionPane.showMessageDialog(null, "Silahkan Klik Data Yang Ingin Diedit Pada Tabel Dibawah");
-        txtid.setEnabled(true);
+        txtid.setEnabled(false);
         txttanggal.setEnabled(true);
         txtjam.setEnabled(true);
         cboxstatus.setEnabled(true);
@@ -452,24 +592,30 @@ public class ManagePemeriksaan extends javax.swing.JFrame {
         btnreset.setEnabled(true);
         btnbatal.setEnabled(true);
         btnsimpan.setEnabled(true);
-        jLabel7.setText("edit");
+        setStatusC("edit");
     }//GEN-LAST:event_btneditActionPerformed
 
     private void tablepemeriksaanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablepemeriksaanMouseClicked
-        if(jLabel7.getText() == "edit" || jLabel7.getText() == "hapus"){
+        if(getStatusC() == "edit" || getStatusC() == "hapus"){
         int baris = tablepemeriksaan.rowAtPoint(evt.getPoint());
-        String kode_pemeriksaaan =tablepemeriksaan.getValueAt(baris, 0).toString();
-        txtid.setText(kode_pemeriksaaan);
+        String kode_pemeriksaan =tablepemeriksaan.getValueAt(baris, 0).toString();
+        txtid.setText(kode_pemeriksaan);
+        setIDPE(kode_pemeriksaan);
         String id_pasien =tablepemeriksaan.getValueAt(baris, 6).toString();
         txtidpasien.setText(id_pasien);
+        setIDP(id_pasien);
         String id_dokter =tablepemeriksaan.getValueAt(baris, 5).toString();
         txtiddokter.setText(id_dokter);
+        setIDD(id_dokter);
         String nama_dokter = tablepemeriksaan.getValueAt(baris, 1).toString();
         txtnamadokter.setText(nama_dokter);
+        setNamaD(nama_dokter);
         String nama_pasien = tablepemeriksaan.getValueAt(baris, 2).toString();
-        txtnamapasien.setText(nama_dokter);
+        txtnamapasien.setText(nama_pasien);
+        setNamaP(nama_pasien);
         String status_pemeriksaan =tablepemeriksaan.getValueAt(baris, 4).toString();
         cboxstatus.setSelectedItem(status_pemeriksaan);
+        setStatus(status_pemeriksaan);
         }
     }//GEN-LAST:event_tablepemeriksaanMouseClicked
 
@@ -482,15 +628,15 @@ public class ManagePemeriksaan extends javax.swing.JFrame {
         btnbatal.setEnabled(true);
         btnsimpan.setEnabled(true);
         btnsimpan.setText("Delete Data");
-        jLabel7.setText("hapus");
+        setStatusC("hapus");
     }//GEN-LAST:event_btnhapusActionPerformed
 
     private void txtnamapasienActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtnamapasienActionPerformed
-        // TODO add your handling code here:
+           setNamaP(txtnamapasien.getText());
     }//GEN-LAST:event_txtnamapasienActionPerformed
 
     private void txtidpasienActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtidpasienActionPerformed
-
+           setIDP(txtidpasien.getText());
     }//GEN-LAST:event_txtidpasienActionPerformed
 
     private void txtiddokterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtiddokterActionPerformed
@@ -498,31 +644,50 @@ public class ManagePemeriksaan extends javax.swing.JFrame {
     }//GEN-LAST:event_txtiddokterActionPerformed
 
     private void txtnamadokterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtnamadokterActionPerformed
-        // TODO add your handling code here:
+
     }//GEN-LAST:event_txtnamadokterActionPerformed
-
-    private void txtiddokterMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtiddokterMouseClicked
-
-
-    }//GEN-LAST:event_txtiddokterMouseClicked
-
-    private void txtidpasienMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtidpasienMousePressed
-
-    }//GEN-LAST:event_txtidpasienMousePressed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         PemeriksaanDokter pd = new PemeriksaanDokter(new javax.swing.JFrame(), true);
         pd.setVisible(true);
         txtiddokter.setText(pd.getAmbilData()[0]);
+        setIDD(pd.getAmbilData()[0]);
         txtnamadokter.setText(pd.getAmbilData()[1]);
+        setNamaD(pd.getAmbilData()[1]);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
        PemeriksaanPasien pp = new PemeriksaanPasien(new javax.swing.JFrame(), true);
         pp.setVisible(true);
         txtidpasien.setText(pp.getAmbilData()[0]);
+        setIDP(pp.getAmbilData()[0]);
         txtnamapasien.setText(pp.getAmbilData()[1]);
+        setNamaP(pp.getAmbilData()[1]);
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void txtidActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtidActionPerformed
+        setIDPE(txtid.getText());
+    }//GEN-LAST:event_txtidActionPerformed
+
+    private void txttanggalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txttanggalActionPerformed
+        setTanggal(Tanggalan());
+    }//GEN-LAST:event_txttanggalActionPerformed
+
+    private void txtjamKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtjamKeyReleased
+        setTanggal(Tanggalan());
+    }//GEN-LAST:event_txtjamKeyReleased
+
+    private void cboxstatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboxstatusActionPerformed
+        setStatus(cboxstatus.getSelectedItem().toString());
+    }//GEN-LAST:event_cboxstatusActionPerformed
+
+    private void btnbatalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnbatalActionPerformed
+        batal();
+    }//GEN-LAST:event_btnbatalActionPerformed
+
+    private void btnresetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnresetActionPerformed
+        reset();
+    }//GEN-LAST:event_btnresetActionPerformed
 private void load_table(){
         //menampilkan data database kedalam tabel
         DefaultTableModel model = new DefaultTableModel();
@@ -554,7 +719,7 @@ private void load_table(){
         tablepemeriksaan.getColumnModel().getColumn(6).setMaxWidth(0); 
 }
 private String Tanggalan(){
-    DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 txttanggal.setFormats(dateFormat);
 DateFormat sysDate = new SimpleDateFormat("yyyy/MM/dd");
 JSpinner.DateEditor timeEditor = new JSpinner.DateEditor(txtjam, "HH:mm:ss");
@@ -570,35 +735,6 @@ this.dataPopUp = dataPopUp;
 public String[] getDataPopUp()
 {
 return dataPopUp;
-}
-private void reset(){
-    txtidpasien.setEnabled(false);
-    txtnamapasien.setEnabled(false);
-    cboxstatus.setEnabled(false);
-    btnreset.setEnabled(false);
-    btnbatal.setEnabled(false);
-    btnsimpan.setEnabled(false);
-    btnhapus.setEnabled(true);
-    btnedit.setEnabled(true);
-    btntambah.setEnabled(true);
-
-}
-private void kosong(){
-        txtid.setEnabled(false);
-        txttanggal.setEnabled(false);
-        txtjam.setEnabled(false);
-        cboxstatus.setEnabled(false);
-        txtid.setText("");
-        cboxstatus.setSelectedItem(this);
-        jButton1.setEnabled(false);
-        jButton2.setEnabled(false);
-        btntambah.setEnabled(true);
-        btnhapus.setEnabled(true);
-        btnedit.setEnabled(true);
-        btnreset.setEnabled(false);
-        btnbatal.setEnabled(false);
-        btnsimpan.setEnabled(false);
-        jLabel7.setText("tambah");
 }
   /**
      * @param args the command line arguments
